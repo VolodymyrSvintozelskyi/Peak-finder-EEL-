@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eel example</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <script type="text/javascript" src="/eel.js"></script> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    
+    <div class="topnav">
+        <!-- <input id="path" type="text" placeholder="Path to spectra"> -->
+        <!-- <input type="file" name="spectra" id="spectra"> -->
+        <label class="file">
+            <input type="file" id="spectra" aria-label="File browser example">
+            <span class="file-custom">Load spectra</span>
+            <span id="file-name"></span>
+        </label>
+        <div id="statusbar">
+        </div>
+    </div>
+    <div class="container">
+        <div class="menu">
+            <div class="menu-item">
+                <h3>Data selection</h3>
+                <div class="menu-entry">
+                    <label for="file-column">Column:</label> 
+                    <input class="menu-input" type="number" name="column" id="file-column" min="0" value="0">
+                </div>
+            </div>
+            <div class="menu-item">
+                <h3>Filters</h3>
+                <label for="ma-apply" class="menu-subtitle">Moving average</label>
+                <input type="checkbox" name="ma-apply" id="ma-apply" class="menu-check">
+                <div class="submenu">
+                    <div class="menu-entry">
+                        <label>Width:
+                            <input class="menu-input" type="number" name="ma-width" id="ma-width" min="1" value="3">
+                        </label> 
+                    </div>
+                    <div class="menu-entry">
+                        <label>Iterations:
+                            <input class="menu-input" type="number" name="ma-iter" id="ma-iter" min="1" value="2">
+                        </label> 
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item">
+                <h3>Brute peak finders</h3>
+                <label for="second-deriv-apply" class="menu-subtitle">Second derivative</label>
+                <input type="checkbox" name="second-deriv-apply" id="second-deriv-apply" class="menu-check">
+                <div class="submenu">
+                    <div class="menu-entry">
+                        <label>Peak width (p):
+                            <input class="menu-input" type="number" name="ma-width" id="second_p" min="1" value="1">
+                        </label> 
+                    </div>
+                    <div class="menu-entry">
+                        <label>Left bound (y&prime;&prime;(x-p) > a1):
+                            <input class="menu-input" type="number" name="ma-width" id="second_a1" min="0" value="1" step="any">
+                        </label> 
+                    </div>
+                    <div class="menu-entry">
+                        <label>Center bound (y&prime;&prime;(x) < a2):
+                            <input class="menu-input" type="number" name="ma-width" id="second_a2" min="0" value="1" step="any">
+                        </label> 
+                    </div>
+                    <div class="menu-entry">
+                        <label>Right bound (y&prime;&prime;(x+p)	 > a3):
+                            <input class="menu-input" type="number" name="ma-width" id="second_a3" min="0" value="1" step="any">
+                        </label> 
+                    </div>
+                </div>
+                <label for="smoothing-apply" class="menu-subtitle">Smoothing</label>
+                <input type="checkbox" name="smoothing-apply" id="smoothing-apply" class="menu-check">
+                <div class="submenu">
+                    <div class="menu-entry">
+                        <label>Moving average width:
+                            <input class="menu-input" type="number" name="ma-width" id="smooth_width" min="1" value="1">
+                        </label> 
+                    </div>
+                    <div class="menu-entry">
+                        <label>Number of iterations:
+                            <input class="menu-input" type="number" name="ma-width" id="smooth_iter" min="1" value="1">
+                        </label> 
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item">
+                <h3>Fits</h3>
+                <label for="auto-finder-apply" class="menu-subtitle">Automatic fit</label>
+                <input type="checkbox" name="auto-finder-apply" id="auto-finder-apply" class="menu-check">
+                <div class="submenu">
+                    <div class="menu-entry">
+                        <label>Range separation factor:
+                            <input class="menu-input" type="number" name="ma-width" id="autofit_sep" min="0" value="1">
+                        </label> 
+                    </div>
+                    <div class="menu-entry">
+                        <label>Active range factor:
+                            <input class="menu-input" type="number" name="ma-width" id="autofit_active" min="0" value="1">
+                        </label> 
+                    </div>
+                    <div class="menu-entry">
+                        <label>Max peaks per range:
+                            <input class="menu-input" type="number" name="ma-width" id="autofit_max_peaks" min="0" value="1">
+                        </label> 
+                    </div>
+                    <div class="menu-entry">
+                        <label>Amplitude threshold:
+                            <input class="menu-input" type="number" name="ma-width" id="autofit_ampl_thr" min="0" value="1" step="any">
+                        </label> 
+                    </div>
+                </div>
+
+                <label for="man-finder-apply" class="menu-subtitle">Manual fit</label>
+                <input type="checkbox" name="man-finder-apply" id="man-finder-apply" class="menu-check">
+                <div class="submenu">
+                    <div class="menu-entry">
+                        <label>Number of peaks:
+                            <input class="menu-input" type="number" name="ma-width" id="manfit_num_peaks" min="0" value="1">
+                        </label> 
+                    </div>
+                    <div class="menu-entry">
+                        <label>Amplitude threshold:
+                            <input class="menu-input" type="number" name="ma-width" id="manfit_ampl_thr" min="0" value="1" step="any">
+                        </label> 
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+        <div class="content">
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 0)">Data</button>
+                <button class="tablinks" onclick="openTab(event, 1)">Moving average</button>
+                <button class="tablinks" onclick="openTab(event, 2)">Second derivative</button>
+                <button class="tablinks" onclick="openTab(event, 3)">Smoothed spectra</button>
+                <button class="tablinks" onclick="openTab(event, 4)">Fit result</button>
+            </div>
+    
+            <div id="canvas" ></div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>
